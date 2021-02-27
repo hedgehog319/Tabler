@@ -4,11 +4,11 @@ from aiogram.dispatcher import FSMContext
 from aiogram import Bot, Dispatcher, types, executor
 
 from database.serializers import UserSerializer, GroupSerializer, GroupScheduleSerializer
-from states import GroupChangeState
+from bot.states import GroupChangeState
 from utils.updater import download_schedules, update_schedules
 
-import keyboards as kb
-from messages import MESSAGES
+import bot.keyboards as kb
+from bot.messages import MESSAGES
 from settings import TOKEN
 
 bot = Bot(token=TOKEN)
