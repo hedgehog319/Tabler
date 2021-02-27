@@ -41,7 +41,7 @@ class ScheduleSerializer:
 class GroupScheduleSerializer:
     @staticmethod
     def get_schedule(group_id, week_parity, week_day) -> []:
-        schedule = Schedule.select().join(GroupSchedule).where(GroupSchedule.group_id == group_id,
+        schedule = Schedule.select().join(GroupSchedule).where(GroupSchedule.group == group_id,
                                                                Schedule.week_parity == week_parity,
                                                                Schedule.week_day == week_day).execute()
         day_schedule = []
@@ -56,13 +56,13 @@ class GroupScheduleSerializer:
 
     @staticmethod
     def create(**kwargs) -> GroupSchedule:
-        group_id = kwargs['group_id']
-        schedule_id = kwargs['schedule_id']
-        return GroupSchedule.create(group_id=group_id, schedule_id=schedule_id)
+        group = kwargs['group_id']
+        schedule = kwargs['schedule_id']
+        return GroupSchedule.create(group=group, schedule=schedule)
 
     @staticmethod
     def clear_schedule(group_id) -> int:
-        schedules = Schedule.select(Schedule.id).join(GroupSchedule).where(GroupSchedule.group_id == group_id)
+        schedules = Schedule.select(Schedule.id).join(GroupSchedule).where(GroupSchedule.group == group_id)
         for schedule in schedules:
             schedule.delete_instance()
 
@@ -78,7 +78,7 @@ class GroupScheduleSerializer:
         classes = kwargs['classes']
         teacher = kwargs['teacher']
 
-        schedule = Schedule.select().join(GroupSchedule).where(GroupSchedule.group_id == group_id,
+        schedule = Schedule.select().join(GroupSchedule).where(GroupSchedule.group == group_id,
                                                                Schedule.week_parity == week_parity,
                                                                Schedule.week_day == week_day,
                                                                Schedule.pair_number == pair_number).first()
@@ -91,12 +91,12 @@ class GroupScheduleSerializer:
             schedule.save()
         else:
             schedule = ScheduleSerializer.create(**kwargs)
-            GroupScheduleSerializer.create(group_id=group_id, schedule_id=schedule.id)
+            GroupScheduleSerializer.create(group=group_id, schedule=schedule.id)
 
     @staticmethod
     def delete(group_id, week_parity, week_day, pair_number) -> bool:
         week_day = WeekDaySerializer.get_id(week_day)
-        schedule = Schedule.select(Schedule.id).join(GroupSchedule).where(GroupSchedule.group_id == group_id,
+        schedule = Schedule.select(Schedule.id).join(GroupSchedule).where(GroupSchedule.group == group_id,
                                                                           Schedule.week_parity == week_parity,
                                                                           Schedule.pair_number == pair_number,
                                                                           Schedule.week_day == week_day).first()
@@ -110,27 +110,27 @@ class GroupScheduleSerializer:
 class UserSerializer:
     @staticmethod
     def get_group(user_id):
-        return User.select().where(User.user_id == user_id).first().group_id
+        return User.select().where(User.user == user_id).first().group
 
     @staticmethod
     def create_or_update_group(user_id, group_id):
-        user = User.get_or_none(user_id=user_id)
+        user = User.get_or_none(user=user_id)
         if user is None:
-            user = User.create(user_id=user_id, group_id=group_id)
+            user = User.create(user=user_id, group=group_id)
         else:
-            user.group_id = group_id
+            user.group = group_id
             user.save()
 
         return user
 
     @staticmethod
     def is_user(user_id):
-        user = User.select().where(User.user_id == user_id).first()
+        user = User.select().where(User.user == user_id).first()
         return user is not None
 
     @staticmethod
     def is_admin(user_id):
-        user = User.select().where(User.user_id == user_id).first()
+        user = User.select().where(User.user == user_id).first()
 
         if user is None:
             return False
