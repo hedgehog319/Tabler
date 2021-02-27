@@ -12,7 +12,8 @@ def parse_command(command):
                   database.models.GroupSchedule]
         db.create_tables(tables)
     elif 'start' in command:
-        print('start')
+        from bot.TablerBot import start
+        start()
     else:
         print('unknown command')
 

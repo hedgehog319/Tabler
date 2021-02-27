@@ -150,3 +150,7 @@ async def admin_panel(call: types.CallbackQuery, callback_data: dict):
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
+
+
+def start():
+    executor.start_polling(dp, skip_updates=True)
