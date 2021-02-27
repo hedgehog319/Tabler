@@ -21,7 +21,7 @@ class User(BaseModel):
     is_admin = BooleanField(default=False)
 
     def __str__(self):
-        return f'Id: {self.user_id}, Group Id:{self.group_id}'
+        return f'Id: {self.user}, Group Id:{self.group}'
 
     class Meta:
         table_name = 'users'
@@ -49,7 +49,7 @@ class GroupSchedule(BaseModel):
     schedule = ForeignKeyField(Schedule, related_name='schedules', on_delete='CASCADE')
 
     def __str__(self):
-        return f'{self.group_id} {self.schedule_id}'
+        return f'{self.group} {self.schedule}'
 
 
 class WeekDay(BaseModel):
