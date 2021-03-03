@@ -31,6 +31,12 @@ async def change_group(message: types.Message):
     await GroupChangeState.first()
 
 
+@dp.message_handler(commands=['cancel'], state="*")
+async def cancel(message: types.Message, state: FSMContext):
+    await state.finish()
+    await message.answer(MESSAGES['cancel'])
+
+
 @dp.message_handler(state=GroupChangeState.EnterGroup)
 async def enter_group(message: types.Message, state: FSMContext):
     group = GroupSerializer.get_group(message.text)
@@ -41,12 +47,6 @@ async def enter_group(message: types.Message, state: FSMContext):
                                               group_id=group.id)
         await message.answer(MESSAGES['group_changed_to'].format(group.name))
         await state.finish()
-
-
-@dp.message_handler(commands=['cancel'], state="*")
-async def cancel(message: types.Message, state: FSMContext):
-    await state.finish()
-    await message.answer(MESSAGES['cancel'])
 
 
 @dp.message_handler(commands=['menu'])
