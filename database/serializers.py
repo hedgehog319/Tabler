@@ -19,6 +19,15 @@ class GroupSerializer:
     def insert(name):
         return Group.create(name=name)
 
+    @staticmethod
+    def create(**kwargs):
+        name = kwargs['name']
+        try:
+            id = kwargs['id']
+            return Group.create(id=id, name=name)
+        except IndexError:
+            return Group.create(name=name)
+
 
 class ScheduleSerializer:
     @staticmethod
@@ -156,4 +165,4 @@ class WeekDaySerializer:
 
     @staticmethod
     def create(name):
-        return WeekDay.create(id=1, day=name)
+        return WeekDay.create(day=name)

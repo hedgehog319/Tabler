@@ -2,6 +2,6 @@
 __pycache__
 /media/
 /venv/
-/secrets/
+/security/
 
 /.env
